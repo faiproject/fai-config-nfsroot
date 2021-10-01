@@ -1,6 +1,6 @@
 PACKAGES install-norec
 debootstrap
-git-core
+git
 # package list for creating the NFSROOT
 
 PACKAGES install-norec FULL
