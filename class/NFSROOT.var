@@ -12,6 +12,7 @@ FAI_ROOTPW='$1$kBnWcO.E$djxB128U7dMkrltJHPf6d1'
 #http_proxy=http://proxy:3128
 #ftp_proxy=http://proxy:3128
 FAI_BASEFILEURL=https://fai-project.org/download/basefiles/
+NIC1=eth0
 
 # Configuration space
 #FAI_CONFIGDIR=/srv/fai/config
