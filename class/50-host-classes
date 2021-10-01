@@ -27,6 +27,8 @@ case $HOSTNAME in
         ifclass I386 && echo SLC7_32
         ifclass AMD64 && echo SLC7_64
 	;;
+    nfsroot)
+        echo "DEBIAN LVM";;
     *)
         echo "FAIBASE DEBIAN DEMO" ;;
 esac
