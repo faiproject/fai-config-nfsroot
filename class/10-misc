@@ -6,7 +6,7 @@ error=0; trap 'error=$(($?>$error?$?:$error))' ERR # save maximum error code
 
 if [ $FAI_ACTION = "install" -o $FAI_ACTION = "dirinstall" ] ; then
 	if ifclass NFSROOT; then
-		fcopy -iM /.THIS_IS_THE_FAI_NFSROOT
+		touch $FAI_ROOT/.THIS_IS_THE_FAI_NFSROOT
 	fi
 fi
 exit $error
