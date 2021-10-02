@@ -1,0 +1,6 @@
+#! /bin/bash
+
+cat <<'EOF' >> $target/etc/pacman.d/mirrorlist
+Server = http://mirror.rackspace.com/archlinux/$repo/os/$arch
+EOF
+
