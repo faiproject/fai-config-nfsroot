@@ -25,6 +25,7 @@ jobs:
           pwd
           sudo ln -snf $(basename $PWD) ../nfsroot
           sudo fai -Ns git+https://github.com/faiproject/fai-config-nfsroot#nfsroot -c NFSROOT,FULL,AMD64 -u nfsroot -v dirinstall $DIR
+          sudo mkdir -p /srv/fai/config/class/
           sudo fai-cd -e -M -S -C /etc/fai/ -f /var/www/html/filesystem.squashfs
           sudo ln -snf /srv/tftp/fai/vmlinuz-install /var/www/html/vmlinuz
           sudo ln -snf /srv/tftp/fai/initrd.img-install /var/www/html/initrd.img
