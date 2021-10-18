@@ -18,12 +18,13 @@ jobs:
         
       - name: step 2 - Add artifacts to publish to the temp folder
         run: |
-          export DIR=/srv/fai/nfsroot-`date +"%Y%m%d%H%M%S"`
+          export DIR=/srv/fai/nfsroot
+          #export DIR=/srv/fai/nfsroot-`date +"%Y%m%d%H%M%S"`
           sudo mkdir -p $DIR /var/www/html
           echo $DIR
           cd $DIR
           pwd
-          sudo ln -snf $(basename $PWD) ../nfsroot
+          #sudo ln -snf $(basename $PWD) ../nfsroot
           sudo mkdir -p /srv/fai/config/class/
           sudo fai -Ns git+https://github.com/faiproject/fai-config-nfsroot#nfsroot -c NFSROOT,FULL,AMD64 -u nfsroot -v dirinstall $DIR
           sudo mkdir -p ../nfsroot/srv/fai/config/class/
