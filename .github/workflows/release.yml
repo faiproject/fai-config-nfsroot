@@ -32,9 +32,10 @@ jobs:
           sudo fai-cd -e -M -S -C /etc/fai/ -f /var/www/html/filesystem.squashfs
           sudo ln -snf /srv/fai/nfsroot/boot/vmlinuz* /var/www/html/
           sudo ln -snf /srv/fai/nfsroot/boot/initrd.img* /var/www/html/
-    
+          sudo rm /var/www/html/*.html
+          
       - name: Use the Upload Artifact GitHub Action
         uses: actions/upload-artifact@v2
         with: 
           name: assets-for-download
-          path: /var/www/html
+          path: /var/www/html/*
