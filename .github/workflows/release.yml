@@ -28,8 +28,8 @@ jobs:
           sudo fai -Ns git+https://github.com/faiproject/fai-config-nfsroot#nfsroot -c NFSROOT,FULL,AMD64 -u nfsroot -v dirinstall $DIR
           sudo mkdir -p ../nfsroot/srv/fai/config/class/
           #sudo fai-cd -e -M -S -C /etc/fai/ -f /var/www/html/filesystem.squashfs
-          sudo ln -snf /srv/tftp/fai/vmlinuz-install /var/www/html/vmlinuz
-          sudo ln -snf /srv/tftp/fai/initrd.img-install /var/www/html/initrd.img
+          sudo ln -snf /srv/fai/nfsroot/boot/vmlinuz* /var/www/html/
+          sudo ln -snf /srv/fai/nfsroot/boot/initrd.img* /var/www/html/
     
       - name: Use the Upload Artifact GitHub Action
         uses: actions/upload-artifact@v2
