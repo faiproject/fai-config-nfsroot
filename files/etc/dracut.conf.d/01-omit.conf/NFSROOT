@@ -1,0 +1,2 @@
+omit_dracutmodules+=" btrfs crypt dash lvm resume usrmount modsign mdraid shutdown dracut-systemd systemd systemd-initrd systemd-networkd systemd-initrd virtfs "
+filesystems=" ext4 "

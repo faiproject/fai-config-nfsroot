@@ -1,0 +1,1 @@
+omit_dracutmodules+=" dracut-systemd systemd systemd-initrd systemd-networkd systemd-initrd "
