@@ -27,6 +27,8 @@ PACKAGES install-norec
 dracut live-boot- initramfs-tools-
 dracut-config-generic
 dracut-network
+dracut-live
+dracut-squash
 sysvinit-core systemd-sysv-
 curl lftp
 less
