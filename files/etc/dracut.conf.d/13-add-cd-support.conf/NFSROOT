@@ -1,1 +1,1 @@
-add_dracutmodules+=" dmsquash-live "
+add_dracutmodules+=" dmsquash-live squash livenet img-lib"
