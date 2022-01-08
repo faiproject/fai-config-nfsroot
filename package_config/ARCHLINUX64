@@ -1,0 +1,9 @@
+PACKAGES pacman-S
+dracut
+linux
+grub
+
+vi
+vim
+zile
+emacs-nox
