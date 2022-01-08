@@ -1,4 +1,6 @@
 #! /bin/bash
+mv $FAI_ROOT/root.x86_64/* $FAI_ROOT/
+rmdir $FAI_ROOT/root.x86_64
 
 cat <<'EOF' >> $target/etc/pacman.d/mirrorlist
 Server = http://mirror.rackspace.com/archlinux/$repo/os/$arch
