@@ -2,9 +2,10 @@ PACKAGES pacman-S
 dracut
 linux
 grub
-
+linux-firmware
 vi
 vim
 zile
 emacs-nox
 mandoc
+
