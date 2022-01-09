@@ -83,5 +83,6 @@ if ifclass -o DEBIAN UBUNTU ; then
 echo "grub-pc grub-pc/install_devices multiselect $mbrdevices" | $ROOTCMD debconf-set-selections
 $ROOTCMD dpkg-reconfigure grub-pc
 fi
+$ROOTCMD update-grub || $ROOTCMD grub-mkconfig -o /boot/grub/grub.cfg
 
 exit $error
