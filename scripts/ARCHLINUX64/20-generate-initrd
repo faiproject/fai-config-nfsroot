@@ -2,6 +2,8 @@
 
 error=0; trap 'error=$(($?>$error?$?:$error))' ERR # save maximum error code
 
-$ROOTCMD dracut -v --kver $(ls -1 /lib/modules/ |tail -n 1)
+cd $target/lib/modules/
+KVER=$(ls -1 |tail -n 1)
+$ROOTCMD dracut -v --kver "$KVER"
 
 exit $error
