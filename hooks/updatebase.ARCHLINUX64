@@ -4,11 +4,19 @@ if [ ! -f $target/etc/resolv.conf ]; then
     cp /etc/resolv.conf $target/etc
 fi
 
+#mount filesystems
+for i in /proc /sys /dev ; do mount --rbind $i $FAI_ROOT/$i
+
+#create pacman trustdb
+$ROOTCMD pacman-key --init
+$ROOTCMD pacman-key --populate archlinux
+
+#refresh repos and update
 if [ X$verbose = X1 ]; then
 	echo "Updating base"
-	$ROOTCMD pacman -Syu |& tee -a $LOGDIR/software.log
+	$ROOTCMD pacman --noconfirm -Syu |& tee -a $LOGDIR/software.log
 else
-	$ROOTCMD pacman -Syu >> $LOGDIR/software.log
+	$ROOTCMD pacman --noconfirm -Syu >> $LOGDIR/software.log
 fi
 
 $ROOTCMD systemd-machine-id-setup
