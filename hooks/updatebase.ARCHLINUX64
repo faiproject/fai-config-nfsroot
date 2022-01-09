@@ -19,11 +19,13 @@ if [ "$FAI_ACTION" = "install" -o "$FAI_ACTION" = "dirinstall" ]; then
     fi
     mount -t devpts devpts $FAI_ROOT/dev/pts
     mount --make-private $FAI_ROOT/dev/pts
-fi
 
 #create pacman trustdb
 $ROOTCMD pacman-key --init
 $ROOTCMD pacman-key --populate archlinux
+$ROOTCMD systemd-machine-id-setup
+$ROOTCMD genfstab -U / >$FAI_ROOT/etc/fstab
+fi
 
 #refresh repos and update
 if [ X$verbose = X1 ]; then
@@ -33,7 +35,6 @@ else
 	$ROOTCMD pacman --noconfirm -Syu >> $LOGDIR/software.log
 fi
 
-$ROOTCMD systemd-machine-id-setup
 
 skiptask updatebase
 
