@@ -1,0 +1,4 @@
+#! /bin/bash
+
+KVER=$(ls -1 /lib/modules/ |tail -n 1)
+$ROOTCMD cp -a /usr/lib/modules/$KVER/vmlinuz /boot/vmlinuz-$KVER
