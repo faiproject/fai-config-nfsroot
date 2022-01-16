@@ -1,0 +1,6 @@
+PACKAGES apk-add
+linux-lts
+grub
+vim
+emacs-nox
+mandoc

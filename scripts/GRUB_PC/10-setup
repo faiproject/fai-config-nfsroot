@@ -21,7 +21,7 @@ ainsl /etc/default/grub 'GRUB_DISABLE_OS_PROBER=true'
 
 # skip the rest, if not an initial installation
 if [ $FAI_ACTION != "install" ]; then
-    $ROOTCMD update-grub
+    $ROOTCMD update-grub || $ROOTCMD grub-mkconfig -o /boot/grub/grub.cfg
     exit $error
 fi
 
@@ -79,6 +79,4 @@ else
     $ROOTCMD grub-install --no-floppy "$mbrdevices"
 fi
 
-echo "grub-pc grub-pc/install_devices multiselect $mbrdevices" | $ROOTCMD debconf-set-selections
-$ROOTCMD dpkg-reconfigure grub-pc
 exit $error

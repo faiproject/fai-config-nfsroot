@@ -1,0 +1,36 @@
+#! /bin/bash
+
+if [ ! -f $target/etc/resolv.conf ]; then
+    cp /etc/resolv.conf $target/etc
+fi
+
+#mount filesystems
+if [ "$FAI_ACTION" = "install" -o "$FAI_ACTION" = "dirinstall" ]; then
+    mount -t proc   proc   $FAI_ROOT/proc
+    mount -t sysfs  sysfs  $FAI_ROOT/sys
+    if [ "$FAI_ACTION" = "install" -a  -d /sys/firmware/efi ]; then
+       mount -t efivarfs none $FAI_ROOT/sys/firmware/efi/efivars
+    fi
+    if [ -f /etc/init.d/udev ]; then
+      mount --bind /dev $FAI_ROOT/dev
+      mount --make-private $FAI_ROOT/dev
+      mkdir -p $target/run/udev
+      mount --bind /run/udev $target/run/udev
+    fi
+    mount -t devpts devpts $FAI_ROOT/dev/pts
+    mount --make-private $FAI_ROOT/dev/pts
+
+$ROOTCMD apk update
+fi
+
+#refresh repos and update
+if [ X$verbose = X1 ]; then
+	echo "Updating base"
+	$ROOTCMD apk upgrade -v |& tee -a $LOGDIR/software.log
+else
+	$ROOTCMD apk upgrade >> $LOGDIR/software.log
+fi
+
+
+skiptask updatebase
+
