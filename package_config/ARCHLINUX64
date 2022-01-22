@@ -1,4 +1,4 @@
-PACKAGES pacman-S
+PACKAGES pacman-install
 dracut
 linux
 grub
