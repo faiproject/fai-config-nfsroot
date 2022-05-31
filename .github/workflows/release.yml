@@ -3,7 +3,11 @@ name: create kernel initrd and squashfs and publish it to github releases
 on:
   push:
     branches: [ nfsroot ]
-
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '30 11 13 * *'
+  workflow_call:
+  
 jobs:
        
   archive-build-artifacts:
