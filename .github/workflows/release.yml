@@ -16,6 +16,7 @@ jobs:
 
       - name: Add fai to ubuntu image
         run: |
+          sudo add-apt-repository -y universe
           sudo add-apt-repository -y ppa:fai/ppa
           sudo apt-get -q update
           sudo apt-get -y install fai-client fai-server debian-archive-keyring debian-keyring ubuntu-keyring
