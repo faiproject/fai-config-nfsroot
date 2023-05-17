@@ -22,7 +22,7 @@ netselect
 mdadm
 #git # git consumes a lot of disk space on the FAI CD
 
-PACKAGES install-norec
+PACKAGES install
 # dracut replaces live-boot and initramfs-tools
 dracut live-boot- initramfs-tools-
 dracut-config-generic
