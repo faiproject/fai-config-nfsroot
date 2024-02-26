@@ -29,7 +29,6 @@ dracut-config-generic
 dracut-network
 dracut-live
 dracut-squash
-sysvinit-core systemd-sysv-
 curl lftp
 less
 ntpdate
@@ -81,5 +80,5 @@ apt-transport-https
 PACKAGES install-norec DEBIAN_10
 fdisk gpg
 
-PACKAGES install-norec DEBIAN_11 DEBIAN_
+PACKAGES install-norec DEBIAN_11 DEBIAN_12
 fdisk gpg
