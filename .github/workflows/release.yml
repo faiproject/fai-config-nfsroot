@@ -36,6 +36,7 @@ jobs:
           #sudo sed -i '2aset -vx' /usr/sbin/fai-cd
           sudo fai-cd -e -M -S -C /etc/fai/ -f /var/www/html/filesystem.squashfs
           sudo ln -snf /srv/fai/nfsroot/boot/vmlinuz* /var/www/html/
+          sudo chmod +r /srv/fai/nfsroot/boot/initrd.img*
           sudo ln -snf /srv/fai/nfsroot/boot/initrd.img* /var/www/html/
           sudo rm /var/www/html/*.html
           
