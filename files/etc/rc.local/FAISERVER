@@ -20,12 +20,11 @@ if [ $? -ne 0 ]; then
     dpkg-reconfigure -fnoninteractive openssh-server
 fi
 sleep 8
-[ -x /etc/init.d/nscd ] && invoke-rc.d nscd restart
 
 echo "================================="
 echo "Setting up the FAI install server"
 echo "This will take a few minutes"
-echo "=================================" 
+echo "================================="
 
 . /etc/fai/fai.conf
 . /etc/fai/nfsroot.conf
@@ -44,8 +43,11 @@ fi
 ainsl /etc/fai/fai.conf "^LOGUSER=fai"
 
 # make index, then import the packages from the CD mirror
+/etc/init.d/apt-cacher-ng restart
 apt-get update >/dev/null
+echo "Importing local packages to apt cache"
 curl -fs 'http://127.0.0.1:3142/acng-report.html?doImport=Start+Import&calcSize=cs&asNeeded=an#bottom' >/dev/null
+echo "Creating FAI Server setup"
 
 # setup the FAI server, including creating the nfsroot, use my own proxy
 export APTPROXY="http://127.0.0.1:3142"
@@ -57,9 +59,9 @@ fi
 if [ $? -eq 0 ]; then
     rm /var/tmp/base.tar.xz
     echo ""
-    echo "================================================" 
+    echo "================================================"
     echo -e "Setting up the FAI server was ${GREEN}successful${NORMAL}"
-    echo "================================================" 
+    echo "================================================"
     echo ""
     sleep 10
 else
@@ -67,9 +69,12 @@ else
     echo "=================================================="
     echo -e "${RED}ERROR${NORMAL}: Setting up the FAI install server ${RED}FAILED${NORMAL}!"
     echo "Read /var/log/fai/fai-setup.log for more debugging"
+    echo "Setup script is now moved to /var/tmp/$0"
     echo "=================================================="
     echo ""
+    cp -p $0 /var/tmp
     sleep 10
+    rm -f $0
     exit 99
 fi
 
@@ -83,7 +88,7 @@ EOF
 fai-chboot -o default
 
 # create a template for booting the installation
-fai-chboot -Iv -f verbose,sshd,createvt,menu -u nfs://faiserver/srv/fai/config bullseye.tmpl
+fai-chboot -Iv -f verbose,sshd,createvt,menu -u nfs://faiserver/srv/fai/config bookworm.tmpl
 
 # Since we do not know the MAC address, our DHCP cannot provide the hostname.
 # Therefore we do explicitly set the hostname
@@ -96,7 +101,7 @@ done
 fai-monitor > /var/log/fai/fai-monitor.log &
 
 # move me away
-mv $0 /var/tmp
+cp -p $0 /var/tmp
 
 # create new rc.local for next reboot
 echo '#! /bin/bash' > /etc/rc.local

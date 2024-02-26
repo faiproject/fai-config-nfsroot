@@ -2,15 +2,17 @@
 
 # mk-basefile, create basefiles for some distributions
 #
-# Thomas Lange, Uni Koeln, 2011-2021
+# Thomas Lange, Uni Koeln, 2011-2024
 # based on the Makefile implementation of Michael Goetze
 #
 # Usage example: mk-basefile -J STRETCH64
 # This will create a STRETCH64.tar.xz basefile.
 
-# Supported distributions (each i386/amd64):
+# Supported distributions (i386/amd64):
 # Debian GNU/Linux
-# Ubuntu 14.04/16.04
+# Ubuntu 14.04/16.04/20.04/22.04
+# AlmaLinux 9
+# Rocky Linux 8/9
 # CentOS 5/6/7/8
 # Scientific Linux Cern 5/6
 #
@@ -32,12 +34,15 @@ EXCLUDE_BUSTER=
 EXCLUDE_BULLSEYE=
 EXCLUDE_BOOKWORM=
 EXCLUDE_TRIXIE=
+EXCLUDE_FORKY=
 EXCLUDE_SID=
 
 EXCLUDE_TRUSTY=dhcp3-client,dhcp3-common,info
 EXCLUDE_XENIAL=udhcpc,dibbler-client,info
 EXCLUDE_BIONIC=udhcpc,dibbler-client,info
 EXCLUDE_FOCAL=udhcpc,dibbler-client,info
+EXCLUDE_JAMMY=udhcpc,dibbler-client,info
+EXCLUDE_NOBLE=udhcpc,dibbler-client,info
 
 # here you can add packages, that are needed very early
 INCLUDE_DEBIAN=
@@ -111,7 +116,8 @@ cleanup-deb() {
     chroot $xtmp apt-get clean
     rm -f $xtmp/etc/hostname $xtmp/etc/resolv.conf \
           $xtmp/var/lib/apt/lists/*_* $xtmp/usr/bin/qemu-*-static \
-          $xtmp/etc/udev/rules.d/70-persistent-net.rules
+          $xtmp/etc/udev/rules.d/70-persistent-net.rules \
+          $xtmp/var/lib/dbus/machine-id
     > $xtmp/etc/machine-id
 }
 
@@ -137,6 +143,30 @@ tarit() {
     tar $attributes --numeric-owner --one-file-system -C $xtmp -cf - . | $zip > $target.$ext
 }
 
+
+rpmdist() {
+
+    local arch=$1
+    local vers=$2
+    local dist=$3
+    local domain=$(domainname)
+
+    check
+    setarch $arch
+    $l32 rinse --directory $xtmp --distribution $dist-$vers --arch $arch --before-post-install $xtmp/post
+    domainname $domain # workaround for #613377
+    cleanup-rinse
+    tarit
+}
+
+
+alma() {
+    rpmdist $1 $2 alma
+}
+
+rocky() {
+    rpmdist $1 $2 rocky
+}
 
 centos() {
 
@@ -205,6 +235,9 @@ prtdists() {
 
     echo "Available:
 
+    ALMA9_64
+    ROCKY8_64
+    ROCKY9_64
     CENTOS5_32   CENTOS5_64
     CENTOS6_32   CENTOS6_64
     CENTOS7_32   CENTOS7_64
@@ -216,6 +249,8 @@ prtdists() {
     XENIAL32     XENIAL64
                  BIONIC64
                  FOCAL64
+                 JAMMY64
+                 NOBLE64
     SQUEEZE32    SQUEEZE64
     WHEEZY32     WHEEZY64
     JESSIE32     JESSIE64
@@ -224,6 +259,7 @@ prtdists() {
     BULLSEYE32   BULLSEYE64
     BOOKWORM32   BOOKWORM64
     TRIXIE32     TRIXIE64
+    FORKY32      FORKY64
     SID32        SID64
 "
 }
@@ -233,14 +269,14 @@ usage() {
     cat <<EOF
 mk-basefile, create minimal base files for a Linux distritubtion
 
-   Copyright (C) 2011-2020 by Thomas Lange
+   Copyright (C) 2011-2023 by Thomas Lange
 
 Usage: mk-basefile [OPTION] ... DISTRIBUTION
 
    -s                   Show list of supported linux distributions
    -f ARCH              Build for foreign architecture ARCH.
    -d DIR               Use DIR for creating the temporary subtree structure.
-   -z                   Use gzip for compressing the tar file.
+   -z                   Use zstd for compressing the tar file.
    -J                   Use xz for compressing the tar file.
    -k                   Keep the temporary subtree structure, do not remove it.
    -h                   Print help.
@@ -265,7 +301,7 @@ while getopts ashzJd:kf: opt ; do
         a) echo "$0: Warning. -a is ignored, because xtattrs, acls and selinux are always added." ;;
         d) export TMPDIR=$OPTARG ;;
         f) export ARCH=$OPTARG ;;
-        z) zip="gzip -9"; ext=tar.gz ;;
+        z) zip="zstd -9"; ext=tar.zst ;;
         J) zip="xz -8" ext=tar.xz ;;
         k) cleanup=0 ;;
         h) usage ;;
@@ -293,14 +329,17 @@ case "$target" in
     CENTOS7_32) centos i386 7 ;;
     CENTOS7_64) centos amd64 7 ;;
     CENTOS8_64) centos amd64 8 ;;
+    ROCKY8_64) rocky amd64 8 ;;
+    ROCKY9_64) rocky amd64 9 ;;
+    ALMA9_64) alma amd64 9 ;;
     SLC5_32) slc i386 5 ;;
     SLC5_64) slc amd64 5 ;;
     SLC6_32) slc i386 6 ;;
     SLC6_64) slc amd64 6 ;;
     SLC7_64) slc amd64 7 ;;
-    TRUSTY*|XENIAL*|BIONIC*|FOCAL*)
+    TRUSTY*|XENIAL*|BIONIC*|FOCAL*|JAMMY*|NOBLE*)
         debgeneric $target $MIRROR_UBUNTU ;;
-    SQUEEZE*|WHEEZY*|JESSIE*|STRETCH*|BUSTER*|BULLSEYE*|BOOKWORM*|TRIXIE*|SID*)
+    SQUEEZE*|WHEEZY*|JESSIE*|STRETCH*|BUSTER*|BULLSEYE*|BOOKWORM*|TRIXIE*|FORKY*|SID*)
         debgeneric $target $MIRROR_DEBIAN $ARCH;;
     *) echo "Unknown distribution. Aborting."
        prtdists

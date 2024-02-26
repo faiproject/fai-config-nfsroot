@@ -182,6 +182,8 @@ disabling ASPM
 data block query control method not found
 subprocess.py.\+RuntimeWarning: line buffering
 Resource conflict.\+ found
+os-prober will not be executed
+/sys/bus/usb/devices/\*:\*/bInterface
 update-rc.d: warning: start and stop actions are no longer supported"
 
 # add pattern on some conditions
@@ -219,4 +221,5 @@ if [ -s $errfile ]; then
    echo "ERRORS found in log files. See $errfile" >&2
 else
    echo "Congratulations! No errors found in log files."
+#   export flag_reboot=1 # if you want to reboot if no errors are found
 fi

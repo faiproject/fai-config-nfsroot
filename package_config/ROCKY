@@ -10,11 +10,10 @@ workstation-product-environment
 
 PACKAGES dnfi
 NetworkManager
+dbus-broker # needed by systemd
 chrony
 kernel
 dracut
-grub2-pc
-# CentOS 7
 less
 openssh
 openssh-clients
@@ -25,6 +24,15 @@ curl
 unzip
 which
 ncurses ncurses-base
+coreutils-common
+libibverbs # needed for nc, but missing dependency
+
+PACKAGES dnfi GRUB_PC
+grub2-pc
+
+PACKAGES dnfi GRUB_EFI
+grub2-efi
+
 
 PACKAGES dnfi LVM
 lvm2
